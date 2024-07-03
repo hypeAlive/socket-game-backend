@@ -1,9 +1,9 @@
 import {GameEvents} from "./GameEvents.js";
 import {GameHandler} from "./GameHandler.js";
-import {GameData, GameState, PlayerData} from "../../types/game/game.type.js";
+import {GameActions, GameData, GameState, PlayerData} from "../../types/game/game.type.js";
 import GamePlayer from "./GamePlayer.js";
 
-export default abstract class BaseGame<PD extends PlayerData, GD extends GameData> {
+export default abstract class BaseGame<PD extends PlayerData, GD extends GameData, GA extends GameActions> {
 
     private gameHandler!: GameHandler;
     private readonly maxPlayers: number;
@@ -107,9 +107,9 @@ export default abstract class BaseGame<PD extends PlayerData, GD extends GameDat
      *
      * @returns boolean - true, wenn der Spieler seinen Zug beendet hat, sonst false
      */
-    protected abstract onPlayerAction(player: GamePlayer<PD>, action: object): boolean;
+    protected abstract onPlayerAction(player: GamePlayer<PD>, action: GA): boolean;
 
-    public handleAction(playerId: string, action: object): void {
+    public handleAction(playerId: string, action: GA): void {
         const player = this.players.find(player => player.getPlayerId() === playerId);
         if(!player) {
             throw new Error("Player not found");
