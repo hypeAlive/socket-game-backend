@@ -1,5 +1,5 @@
 import {GameHandler} from "./GameHandler.js";
-import {GameData} from "../../types/game/game.type.js";
+import {GameData} from "../../types/base/game.type.js";
 
 export enum GameEvents {
     GAME_CREATED = 'GAME_CREATED',

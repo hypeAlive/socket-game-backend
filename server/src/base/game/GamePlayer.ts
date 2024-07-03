@@ -1,4 +1,4 @@
-import {PlayerData} from "../../types/game/game.type.js";
+import {PlayerData} from "../../types/base/game.type.js";
 
 export default class GamePlayer<PD extends PlayerData> {
 

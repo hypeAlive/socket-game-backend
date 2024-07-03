@@ -1,12 +1,12 @@
-import {GameId, GameType} from "../../types/game/game.type.js";
+import {GameId, GameType} from "../../types/base/game.type.js";
 import {GameEvent, GameEvents, GameEventSubscription} from "./GameEvents.js";
 import BaseGame from "./BaseGame.js";
 
 
 export class GameHandler {
 
-    private registeredGames: Map<string, GameType<any, any>> = new Map();
-    private createdGames: Map<GameId, BaseGame<any, any>> = new Map();
+    private registeredGames: Map<string, GameType<any, any, any>> = new Map();
+    private createdGames: Map<GameId, BaseGame<any, any, any>> = new Map();
     private eventSubscriber: Map<GameEvents, GameEventSubscription[]> = new Map();
 
     /**
@@ -20,7 +20,7 @@ export class GameHandler {
         if(!gameType){
             throw new Error("Game not registered");
         }
-        const game: BaseGame<any, any> = gameType.gameClass();
+        const game: BaseGame<any, any, any> = gameType.gameClass();
         game.init(this);
 
         this.createdGames.set(this.createGameId(gameNamespace), game);
@@ -56,7 +56,7 @@ export class GameHandler {
      * @param game - SpielInstanz
      * @returns true, wenn das Spiel erstellt wurde, sonst false
      */
-    public isCreated(game: BaseGame<any, any>): boolean {
+    public isCreated(game: BaseGame<any, any, any>): boolean {
         return this.getGameId(game) !== undefined;
     }
 
@@ -72,7 +72,7 @@ export class GameHandler {
      * @param gameType - SpielTyp definition
      * @throws Error, wenn das Spiel bereits registriert wurde.
      */
-    register(gameType: GameType<any, any>): void {
+    register(gameType: GameType<any, any, any>): void {
 
         if(this.registeredGames.has(gameType.namespace)){
             throw new Error("Game already registered");
@@ -96,7 +96,7 @@ export class GameHandler {
      * @param game - SpielInstanz
      * @returns GameId oder undefined, wenn das Spiel nicht gefunden wurde.
      */
-    public getGameId(game: BaseGame<any, any>): GameId | undefined {
+    public getGameId(game: BaseGame<any, any, any>): GameId | undefined {
         return Array.from(this.createdGames.entries())
             .find(([, value]) => value === game)?.[0];
     }

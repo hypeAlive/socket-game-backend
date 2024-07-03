@@ -1,15 +1,11 @@
 import BaseGame from "../../base/game/BaseGame.js";
-import {GameActions, GameData, GameType, PlayerData} from "../../types/game/game.type.js";
+import {GameActions, GameData, GameType, PlayerData} from "../../types/base/game.type.js";
 import GamePlayer from "../../base/game/GamePlayer.js";
+import {TikTakToeAction, TikTakToeGameData} from "../../types/games/tiktaktoe.types.js";
 
-type TikTakToePlayerAction = GameActions & {
-    x: number,
-    y: number
-}
+export default class TikTakToeGame extends BaseGame<PlayerData, TikTakToeGameData, TikTakToeAction> {
 
-export default class TikTakToeGame extends BaseGame<PlayerData, GameData, TikTakToePlayerAction> {
-
-    public static readonly GAME_TYPE: GameType<PlayerData, GameData, TikTakToePlayerAction> = {
+    public static readonly GAME_TYPE: GameType<PlayerData, GameData, TikTakToeAction> = {
         namespace: TikTakToeGame.constructor.name.toLowerCase(),
         gameClass: () => new TikTakToeGame()
     }
@@ -43,10 +39,10 @@ export default class TikTakToeGame extends BaseGame<PlayerData, GameData, TikTak
         return null;
     }
 
-    protected onPlayerAction(player: GamePlayer<PlayerData>, action: TikTakToePlayerAction): boolean {
+    protected onPlayerAction(player: GamePlayer<PlayerData>, action: TikTakToeAction): boolean {
         if(!this.isPlayerActionValid(action)) return false;
 
-        const {x, y} = action as TikTakToePlayerAction;
+        const {x, y} = action as TikTakToeAction;
 
         this.board[x][y] = player === this.players[0];
 
@@ -55,7 +51,7 @@ export default class TikTakToeGame extends BaseGame<PlayerData, GameData, TikTak
 
     private isPlayerActionValid(action: object): boolean {
 
-        const {x, y} = action as TikTakToePlayerAction;
+        const {x, y} = action as TikTakToeAction;
 
         return x >= 0 && x < 3 && y >= 0 && y < 3 && this.board[x][y] === null;
     }
