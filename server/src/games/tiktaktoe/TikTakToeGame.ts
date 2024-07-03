@@ -1,53 +1,74 @@
-import AbstractGame from "../../base/AbstractGame.js";
-import GamePlayer from "../../base/GamePlayer.js";
-import {CustomGameData} from "../../types/game.types.js";
+import BaseGame from "../../base/game/BaseGame.js";
+import {GameData, GameType, PlayerData} from "../../types/game/game.type.js";
+import GamePlayer from "../../base/game/GamePlayer.js";
 
-export interface TikTakToeGameData extends CustomGameData {
-    row: number;
-    col: number;
+type TikTakToePlayerAction = {
+    x: number,
+    y: number
 }
 
-export interface TikTakToePlayerData {
-    playerId: string;
-}
+export default class TikTakToeGame extends BaseGame<PlayerData, GameData> {
 
-export default class TikTakToeGame extends AbstractGame<TikTakToePlayerData> {
-    private static readonly GAME_ID = 'tiktaktoe';
+    public static readonly GAME_TYPE: GameType<PlayerData, GameData> = {
+        namespace: TikTakToeGame.constructor.name.toLowerCase(),
+        gameClass: () => new TikTakToeGame()
+    }
+
     private static readonly MAX_PLAYERS = 2;
     private static readonly MIN_PLAYERS = 2;
+
     private readonly board: (boolean | null)[][];
 
+
     constructor() {
-        super(TikTakToeGame.GAME_ID, TikTakToeGame.MAX_PLAYERS, TikTakToeGame.MIN_PLAYERS);
+        super(TikTakToeGame.MAX_PLAYERS, TikTakToeGame.MIN_PLAYERS);
         this.board = Array(3).fill(null).map(() => Array(3).fill(null));
     }
 
-    checkWin(): boolean {
+    protected checkWin(): GamePlayer<PlayerData> | null {
         for (let i = 0; i < 3; i++) {
             if (this.board[i][0] !== null && this.board[i][0] === this.board[i][1] && this.board[i][1] === this.board[i][2]) {
-                return true;
+                return this.board[i][0] ? this.players[0] : this.players[1];
             }
             if (this.board[0][i] !== null && this.board[0][i] === this.board[1][i] && this.board[1][i] === this.board[2][i]) {
-                return true;
+                return this.board[0][i] ? this.players[0] : this.players[1];
             }
         }
         if (this.board[0][0] !== null && this.board[0][0] === this.board[1][1] && this.board[1][1] === this.board[2][2]) {
-            return true;
+            return this.board[0][0] ? this.players[0] : this.players[1];
         }
         if (this.board[0][2] !== null && this.board[0][2] === this.board[1][1] && this.board[1][1] === this.board[2][0]) {
-            return true;
+            return this.board[0][2] ? this.players[0] : this.players[1];
         }
+        return null;
+    }
+
+    protected onPlayerAction(player: GamePlayer<PlayerData>, action: object): boolean {
+        if(!this.isPlayerActionValid(action)) return false;
+
+        const {x, y} = action as TikTakToePlayerAction;
+
+        this.board[x][y] = player === this.players[0];
+
         return false;
     }
 
-    onPlayerAction(player: GamePlayer<TikTakToePlayerData>, action: { row: number; col: number }): void {
-        if (this.board[action.row][action.col] === null) {
-            this.board[action.row][action.col] = player.getPlayerId() === this.getPlayers()[0].getPlayerId();
-            if (this.checkWin()) {
-                this.endGame();
-            } else {
-                this.nextTurn();
-            }
-        }
+    private isPlayerActionValid(action: object): boolean {
+        if(!TikTakToeGame.isTikTakToePlayerAction(action)) return false;
+
+        const {x, y} = action as TikTakToePlayerAction;
+
+        return x >= 0 && x < 3 && y >= 0 && y < 3 && this.board[x][y] === null;
     }
+
+    private static isTikTakToePlayerAction(action: any): boolean {
+        return action && typeof action.x === 'number' && typeof action.y === 'number';
+    }
+
+    onGameEnd(): void {
+    }
+
+    onGameStart(): void {
+    }
+
 }
