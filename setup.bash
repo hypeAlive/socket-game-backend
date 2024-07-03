@@ -1,6 +1,6 @@
 #!bin bash
 
-cd ./base
+cd ./types
 npm install
 npm run build
 

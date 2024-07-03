@@ -1,7 +1,7 @@
 import {GameEvents} from "./GameEvents.js";
 import {GameHandler} from "./GameHandler.js";
-import {GameActions, GameData, GameState, PlayerData} from "../../types/base/game.type.js";
 import GamePlayer from "./GamePlayer.js";
+import {GameActions, GameData, GameState, PlayerData} from "socket-game-types";
 
 export default abstract class BaseGame<PD extends PlayerData, GD extends GameData, GA extends GameActions> {
 

@@ -1,6 +1,7 @@
-import {GameId, GameType} from "../../types/base/game.type.js";
 import {GameEvent, GameEvents, GameEventSubscription} from "./GameEvents.js";
 import BaseGame from "./BaseGame.js";
+import {GameType} from "../../types/base/game.type.js";
+import {GameId} from "socket-game-types";
 
 
 export class GameHandler {

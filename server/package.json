@@ -10,6 +10,7 @@
     "test": "jest --verbose"
   },
   "dependencies": {
+    "socket-game-types": "../types"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

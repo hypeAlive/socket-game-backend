@@ -1,7 +1,7 @@
 import BaseGame from "../../base/game/BaseGame.js";
-import {GameActions, GameData, GameType, PlayerData} from "../../types/base/game.type.js";
 import GamePlayer from "../../base/game/GamePlayer.js";
-import {TikTakToeAction, TikTakToeGameData} from "../../types/games/tiktaktoe.types.js";
+import {GameData, PlayerData, TikTakToeAction, TikTakToeGameData} from "socket-game-types";
+import {GameType} from "../../types/base/game.type.js";
 
 export default class TikTakToeGame extends BaseGame<PlayerData, TikTakToeGameData, TikTakToeAction> {
 

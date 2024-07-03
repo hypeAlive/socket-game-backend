@@ -1,4 +1,5 @@
 import BaseGame from "../../base/game/BaseGame.js";
+import {GameActions, GameData, PlayerData} from "socket-game-types";
 
 /**
  * Typdefinition für ein Spiel.
@@ -11,27 +12,3 @@ export interface GameType<PD extends PlayerData, GD extends GameData, GA extends
     namespace: string;
     creation: () => BaseGame<PD, GD, GA>;
 }
-
-export type PlayerData = {
-    playerId: string,
-
-}
-
-export type GameData = {
-    gameId: GameId,
-    playerIds: string[],
-    currentPlayerId: string,
-    winnerId: string | null,
-}
-
-export enum GameState {
-    WAITING = 'WAITING',
-    STARTED = 'STARTED',
-    ENDED = 'ENDED'
-}
-
-export type GameActions = {
-
-}
-
-export type GameId = [gameNamespace: string, identifier: number];

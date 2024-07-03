@@ -1,4 +1,4 @@
-import {GameActions, GameData} from "../base/game.type.js";
+import {GameActions, GameData} from "../base/game.types.js";
 
 export type TikTakToeAction = GameActions & {
     x: number,

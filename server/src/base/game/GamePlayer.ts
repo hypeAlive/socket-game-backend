@@ -1,4 +1,4 @@
-import {PlayerData} from "../../types/base/game.type.js";
+import {PlayerData} from "socket-game-types";
 
 export default class GamePlayer<PD extends PlayerData> {
 
