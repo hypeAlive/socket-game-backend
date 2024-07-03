@@ -9,7 +9,7 @@ import BaseGame from "../../base/game/BaseGame.js";
  */
 export interface GameType<PD extends PlayerData, GD extends GameData, GA extends GameActions> {
     namespace: string;
-    gameClass: () => BaseGame<PD, GD, GA>;
+    creation: () => BaseGame<PD, GD, GA>;
 }
 
 export type PlayerData = {

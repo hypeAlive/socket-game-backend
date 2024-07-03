@@ -20,7 +20,7 @@ export class GameHandler {
         if(!gameType){
             throw new Error("Game not registered");
         }
-        const game: BaseGame<any, any, any> = gameType.gameClass();
+        const game: BaseGame<any, any, any> = gameType.creation();
         game.init(this);
 
         this.createdGames.set(this.createGameId(gameNamespace), game);

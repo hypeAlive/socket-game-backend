@@ -7,7 +7,7 @@ export default class TikTakToeGame extends BaseGame<PlayerData, TikTakToeGameDat
 
     public static readonly GAME_TYPE: GameType<PlayerData, GameData, TikTakToeAction> = {
         namespace: TikTakToeGame.constructor.name.toLowerCase(),
-        gameClass: () => new TikTakToeGame()
+        creation: () => new TikTakToeGame()
     }
 
     private static readonly MAX_PLAYERS = 2;
