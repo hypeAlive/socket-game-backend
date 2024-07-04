@@ -10,7 +10,8 @@
     "test": "jest --verbose"
   },
   "dependencies": {
-    "socket-game-types": "../types"
+    "socket-game-types": "../types",
+    "ts-optional": "github:hypeAlive/ts-optional"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
