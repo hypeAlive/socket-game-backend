@@ -1,7 +1,9 @@
 import {GameEvent, GameEvents, GameEventSubscription} from "./GameEvents.js";
 import BaseGame from "./BaseGame.js";
 import {GameType} from "../../types/base/game.type.js";
-import {GameId} from "socket-game-types";
+import {GameId, GameState} from "socket-game-types";
+import {Optional} from "ts-optional";
+import {PlayerId} from "socket-game-types/dist/base/game.types.js";
 
 
 export class GameHandler {
@@ -16,15 +18,18 @@ export class GameHandler {
      * @param gameNamespace - Namespace des Spiels
      * @throws Error, wenn das Spiel nicht registriert wurde.
      */
-    create(gameNamespace: string): void {
+    create(gameNamespace: string): BaseGame<any, any, any> {
         const gameType = this.registeredGames.get(gameNamespace);
         if(!gameType){
             throw new Error("Game not registered");
         }
         const game: BaseGame<any, any, any> = gameType.creation();
-        game.init(this);
+        const gameId = this.createGameId(gameNamespace);
+        this.createdGames.set(gameId, game);
 
-        this.createdGames.set(this.createGameId(gameNamespace), game);
+        game.init(this, gameId);
+
+        return game;
     }
 
     public subscribe(event: GameEvents, callback: (event: GameEvent<any>) => void): GameEventSubscription {
@@ -61,10 +66,26 @@ export class GameHandler {
         return this.getGameId(game) !== undefined;
     }
 
-    join(): void {
+    join(gameId: GameId): PlayerId {
+        const gameOpt = this.getGameById(gameId);
+        if (gameOpt.isEmpty()) {
+            throw new Error("Game not found");
+        }
+
+        return gameOpt.get().joinGame();
     }
 
-    leave(): void {
+    leave(gameId: GameId, playerId: PlayerId): void {
+        const gameOpt = this.getGameById(gameId);
+        if (gameOpt.isEmpty()) {
+            throw new Error("Game not found");
+        }
+
+        gameOpt.get().leaveGame(playerId);
+    }
+
+    private getGameById(gameId: GameId): Optional<BaseGame<any, any, any>> {
+        return Optional.ofNullable(this.createdGames.get(gameId));
     }
 
     /**
@@ -83,7 +104,7 @@ export class GameHandler {
 
     }
 
-    public sendAction(gameId: GameId, playerId: string, action: object): void {
+    public sendAction(gameId: GameId, playerId: PlayerId, action: object): void {
         const game = this.createdGames.get(gameId);
         if (!game) {
             throw new Error("Game not found");
@@ -121,6 +142,12 @@ export class GameHandler {
             nextNumber++;
         }
         return [gameNamespace, nextNumber];
+    }
+
+    public getAllGames(namespace: string, state: GameState | undefined): BaseGame<any, any, any>[] {
+        return Array.from(this.createdGames.entries())
+            .filter(([gameId, game]) => gameId[0] === namespace && (state === undefined || game.getState() === state))
+            .map(([, game]) => game);
     }
 
 }

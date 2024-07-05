@@ -1,5 +1,3 @@
-#!/bin/bash
-
 
 ./setup.bash
 echo "Setup complete"

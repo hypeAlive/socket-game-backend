@@ -1,13 +1,14 @@
 export type PlayerData = {
-    playerId: string,
+    playerId: PlayerId,
 
 }
 
 export type GameData = {
     gameId: GameId,
-    playerIds: string[],
-    currentPlayerId: string,
-    winnerId: string | null,
+    playerIds: PlayerId[],
+    state: GameState,
+    currentPlayerId?: PlayerId,
+    winnerId?: PlayerId,
 }
 
 export enum GameState {
@@ -17,7 +18,10 @@ export enum GameState {
 }
 
 export type GameActions = {
+    playerId: PlayerId,
 
 }
 
 export type GameId = [gameNamespace: string, identifier: number];
+
+export type PlayerId = [gameId: GameId, identifier: number];
